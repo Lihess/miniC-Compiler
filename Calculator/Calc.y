@@ -2,16 +2,16 @@
     #include <stdio.h>
     double reg[25];
 %}
-%union{
+%union{ // 사용가능한 기호의 타입 지정
      double val;
      int idno;
 }
-%token <idno> NAME
-%token <val> NUMBER
-%left '+''-'
-%left '*''/'
-%nonassoc UMINUS
-%type <val> expr
+%token <idno> NAME // 토큰 지정
+%token <val> NUMBER // 토큰 지정
+%left '+''-' // 좌결합 연산자임을 letf를 통해 알림
+%left '*''/' // *, / 의 우선순위가 더 높음을 명시적으로 표현
+%nonassoc UMINUS // 단항 마이너스를 위한 임시 토큰이 가장 우선순위가 높음
+%type <val> expr 
 %%
 program: statement '\n'
          | program statement '\n'
@@ -23,7 +23,7 @@ expr : expr '+' expr {$$ = $1 + $3;}
          | expr '-' expr {$$ = $1 - $3;}
          | expr '*' expr {$$ = $1 * $3;}
          | expr '/' expr {
-             if($3 == 0.0) yyerror("divide by zero");
+             if($3 == 0.0) yyerror("divide by zero"); // 0으로 나누려할때
              else $$ = $1 / $3;
         }
          | '-' expr %prec UMINUS{$$ = -$2;}
